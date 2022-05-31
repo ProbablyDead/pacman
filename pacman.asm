@@ -264,7 +264,6 @@ mov ah, 0
 mov al, 10h		
 int 10h
 call cs:initGhosts
-call cs:createCandy
 mov cs:flagAte, 0
 mov cs:flagDead, 0
 mov cs:counter, 0	
