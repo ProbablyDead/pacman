@@ -24,7 +24,7 @@ gr equ 205
 vr equ 186
 ;==========================================================
 ;settings
-ghostsCount dw 15
+ghostsCount dw 30
 speed db 2
 step dw 5 
 x dw 13
@@ -429,6 +429,7 @@ ret
 showScore endp
 ;==========================================================
 createCandy proc far
+pusha
 call cs:rand8 ; create candy's x value
 mov bl, 3
 mul bl
@@ -440,6 +441,7 @@ add ax, bx
 mov bx, 350
 div bx
 mov cs:ky, dx
+popa
 ret
 createCandy endp
 ;==========================================================
@@ -1872,7 +1874,7 @@ int 20h
 	mov al, 10h
 	int 10h
 	
-	mov ah, 02h ;4j
+	mov ah, 02h ; mov cursor to 0;0
 	mov dh, 0
 	mov dl, 0
 	mov bh, 0
@@ -1884,7 +1886,7 @@ int 20h
 	call drawPacmen
 	call drawCandy
 
-	mov ah, 02h
+	mov ah, 02h ; hide cursor
 	mov dh, 30
 	mov bh, 0
 	int 10h
@@ -1893,34 +1895,34 @@ int 20h
 
 ;==========================
 ;TSR
-	mov ax, 351ch
+	mov ax, 351ch ; get 1ch interruption vector
 	int 21h
 
-	mov word ptr cs:[old_1ch], bx
+	mov word ptr cs:[old_1ch], bx ; save
 	mov word ptr cs:[old_1ch]+2, es
 	lea dx, new_1ch
-	mov ax, 251ch
+	mov ax, 251ch ; set new 1ch vector
 	int 21h
 
-	mov ax, 3509h
+	mov ax, 3509h; get 09h interruption vector
 	int 21h
 
-	mov word ptr cs:[old_09h], bx
+	mov word ptr cs:[old_09h], bx; save
 	mov word ptr cs:[old_09h]+2, es
 	lea dx, new_09h
-	mov ax, 2509h
+	mov ax, 2509h ; set new 09h vector
 	int 21h
 
-	mov ax, 352fh
+	mov ax, 352fh; get 2fh interruption vector
 	int 21h
 
-	mov word ptr cs:[old_2fh], bx
+	mov word ptr cs:[old_2fh], bx; save
 	mov word ptr cs:[old_2fh]+2, es
 	lea dx, new_2fh
-	mov ax, 252fh
+	mov ax, 252fh; set new 2fh vector
 	int 21h
 
-	lea dx, main 
+	lea dx, main ; leave program  
 	int 27h
 ;==========================================================
 	mov ah, 4ch
