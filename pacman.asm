@@ -76,7 +76,6 @@ gh30 gh <>
 
 seed dw ?
 key db "/off"
-field db  201, 38 dup (gr), 184, 213, 38 dup (gr), 187,	vr, 38 dup (0), 179, 179, 38 dup (0), vr, vr, 38 dup (0), 179, 179, 38 dup (0), vr, vr, 5 dup (0), 201,	4 dup (205), 187, 6 dup(0), 201, 5 dup (205), "$"
 ;==========================================================
 ;variables
 score db ?
@@ -100,29 +99,29 @@ ry dw ?
 chngpcmn db ?
 ;==========================================================
 new_2Fh proc far ;
-    cmp     AH,0b7h         ;  è ­®¬¥à?
-    jne     Pass_2Fh        ; ¥â, ­  ¢ëå®¤
-    cmp     AL,00h          ; ®¤äã­ªæ¨ï ¯à®¢¥àª¨ ­  ¯®¢â®à­ãî ãáâ ­®¢ªã?
-    je      inst            ; à®£à ¬¬  ã¦¥ ãáâ ­®¢«¥­ 
-    cmp     AL,01h          ; ®¤äã­ªæ¨ï ¢ë£àã§ª¨?
-    je      unins           ;  , ­  ¢ë£àã§ªã
-    jmp     short Pass_2Fh  ; ¥¨§¢¥áâ­ ï ¯®¤äã­ªæ¨ï - ­  ¢ëå®¤
+    cmp     AH,0b7h         
+    jne     Pass_2Fh        
+    cmp     AL,00h          
+    je      inst            
+    cmp     AL,01h          
+    je      unins           
+    jmp     short Pass_2Fh  
 inst:
-    mov     AL,0FFh         ; ®®¡é¨¬ ® ­¥¢®§¬®¦­®áâ¨ ¯®¢â®à­®© ãáâ ­®¢ª¨
+    mov     AL,0FFh         
     iret
 Pass_2Fh:
     jmp dword PTR CS:[old_2fh]
 ;
-; -------------- à®¢¥àª  - ¢®§¬®¦­  «¨ ¢ë£àã§ª  ¯à®£à ¬¬ë ¨§ ¯ ¬ïâ¨ ? ------
+; --------------
 unins:
     push    BX
     push    CX
     push    DX
     push    ES
 ;
-    mov     CX,CS   ; à¨£®¤¨âáï ¤«ï áà ¢­¥­¨ï, â.ª. á CS áà ¢­¨¢ âì ­¥«ì§ï
-    mov     AX,3509h    ; à®¢¥à¨âì ¢¥ªâ®à 09h
-    int     21h ; ã­ªæ¨ï 35h ¢ AL - ­®¬¥à ¯à¥àë¢ ­¨ï. ®§¢à â-¢¥ªâ®à ¢ ES:BX
+    mov     CX,CS   
+    mov     AX,3509h    
+    int     21h 
 ;
     mov     DX,ES
     cmp     CX,DX
@@ -131,8 +130,8 @@ unins:
     cmp     BX, offset CS:new_09h
     jne     Not_remove
 ;
-    mov     AX,351ch    ; à®¢¥à¨âì ¢¥ªâ®à 09h
-    int     21h ; ã­ªæ¨ï 35h ¢ AL - ­®¬¥à ¯à¥àë¢ ­¨ï. ®§¢à â-¢¥ªâ®à ¢ ES:BX
+    mov     AX,351ch    
+    int     21h 
 ;
     mov     DX,ES
     cmp     CX,DX
@@ -141,8 +140,8 @@ unins:
     cmp     BX, offset CS:new_1ch
     jne     Not_remove
 
-    mov     AX,352Fh    ; à®¢¥à¨âì ¢¥ªâ®à 2Fh
-    int     21h ; ã­ªæ¨ï 35h ¢ AL - ­®¬¥à ¯à¥àë¢ ­¨ï. ®§¢à â-¢¥ªâ®à ¢ ES:BX
+    mov     AX,352Fh   
+    int     21h
 ;
     mov     DX,ES
     cmp     CX,DX
@@ -154,39 +153,33 @@ unins:
 ;
     push    DS
 ;
-    lds     DX, CS:old_09h   ; â  ª®¬ ­¤  íª¢¨¢ «¥­â­  á«¥¤ãîé¨¬ ¤¢ã¬
-;    mov     DX, word ptr old_09h
-;    mov     DS, word ptr old_09h+2
-    mov     AX,2509h        ;  ¯®«­¥­¨¥ ¢¥ªâ®à  áâ àë¬ á®¤¥à¦¨¬ë¬
+    lds     DX, CS:old_09h  
+    mov     AX,2509h       
     int     21h
 ;
-    lds     DX, CS:old_2fh   ; â  ª®¬ ­¤  íª¢¨¢ «¥­â­  á«¥¤ãîé¨¬ ¤¢ã¬
-;    mov     DX, word ptr int_2Fh_vector
-;    mov     DS, word ptr int_2Fh_vector+2
+    lds     DX, CS:old_2fh
     mov     AX,252Fh
     int     21h
 
-    lds     DX, CS:old_1ch   ; â  ª®¬ ­¤  íª¢¨¢ «¥­â­  á«¥¤ãîé¨¬ ¤¢ã¬
-;    mov     DX, word ptr int_2Fh_vector
-;    mov     DS, word ptr int_2Fh_vector+2
+    lds     DX, CS:old_1ch  
     mov     AX,251ch
     int     21h
 ;
     pop     DS
 ;
-    mov     ES,CS:2Ch       ; ES -> ®ªàã¦¥­¨¥
-    mov     AH, 49h         ; ã­ªæ¨ï ®á¢®¡®¦¤¥­¨ï ¡«®ª  ¯ ¬ïâ¨
+    mov     ES,CS:2Ch      
+    mov     AH, 49h        
     int     21h
 ;
     mov     AX, CS
-    mov     ES, AX          ; ES -> PSP ¢ë£àã§¨¬ á ¬ã ¯à®£à ¬¬ã
-    mov     AH, 49h         ; ã­ªæ¨ï ®á¢®¡®¦¤¥­¨ï ¡«®ª  ¯ ¬ïâ¨
+    mov     ES, AX       
+    mov     AH, 49h       
     int     21h
 ;
-    mov     AL,0Fh          ; à¨§­ ª ãá¯¥è­®© ¢ë£àã§ª¨
+    mov     AL,0Fh      
     jmp     short pop_ret
 Not_remove:
-    mov     AL,0F0h          ; à¨§­ ª - ¢ë£àã¦ âì ­¥«ì§ï
+    mov     AL,0F0h    
 pop_ret:
     pop     ES
     pop     DX
